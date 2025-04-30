@@ -1,0 +1,9 @@
+---
+title: "Advanced Visualizations"
+description: "Using Leaflet and ggAnimate"
+author: 
+  - name: Nick Soares
+    url: https://github.com/nasoares
+date: 04-30-2025
+image: leaflet_example.jpg
+---
