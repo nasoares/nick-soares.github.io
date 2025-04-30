@@ -1,11 +1,17 @@
 ---
-title: "nick-soares.github.io"
+title: "Nick Soares"
+image: media/IMG_1991.jpg
+toc: false
+about: 
+  template: trestles
+  links: 
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/nicholas-soares-795a23290/
+    - text: GitHub
+      href: https://github.com/nasoares
+    - text: Email
+      href: mailto:nasoares@calpoly.edu
 ---
 
-This is a Quarto website.
+Nick has lived in SLO County for most of his life and spends his free time trail running and surfing the local beach breaks. He graduated from Cal Poly in 2021 with a B.S. in Marine Sciences and minors in Statistics and Environmental Studies. While at Cal Poly, he worked as a research assistant studying Harmful Algal Blooms and nearshore rockfish populations. After his undergraduate studies, he went on to work at the Morro Bay National Estuary Program as their Monitoring Coordinator, where he is responsible for coordinating sampling events conducted within the estuary and generating water quality reports. Upon returning to Cal Poly as a Biological Sciences Masters student in 2024, he is focused on applying amplicon sequencing and imaging flow cytometry techniques to characterize the microbial community of the Morro Bay estuary.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
