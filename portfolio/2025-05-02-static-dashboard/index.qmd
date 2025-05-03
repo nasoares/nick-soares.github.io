@@ -1,6 +1,6 @@
 ---
 title: "Static Dashboard"
-description: "Using leaflet and gganimate"
+description: "Deploying static data dashboards"
 author: 
   - name: Nick Soares
     url: https://github.com/nasoares
