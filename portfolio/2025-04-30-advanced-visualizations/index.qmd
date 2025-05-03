@@ -1,9 +1,95 @@
 ---
 title: "Advanced Visualizations"
-description: "Using Leaflet and ggAnimate"
+description: "Using leaflet and gganimate"
 author: 
   - name: Nick Soares
     url: https://github.com/nasoares
 date: 04-30-2025
 image: leaflet_example.jpg
 ---
+```{r}
+#| context: setup
+#| label: load-packages
+#| message: false
+#| echo: false
+
+library(tidyverse)
+library(RColorBrewer)
+library(leaflet)
+library(sf)
+library(viridisLite)
+library(scales)
+library(gganimate)
+``` 
+
+# Making maps with the [leaflet](https://leafletjs.com/) package
+
+```{r}
+#| label: leaflet-map
+#| title: "Perceived Knowledge About Science By Country"
+#| message: false
+#| warning: false
+
+#Loading pre-processed shapefile
+wgm_sf<-read_sf("wgm_sf.shp")
+
+#Creating a color palette to display data
+mypalette<-colorNumeric(
+  palette="viridis",domain=wgm_sf$KnowLevel,
+  na.color="transparent"
+)
+
+#Text labels
+mytext<-paste(
+  "Country: ",wgm_sf$NAME,"<br/>",
+  "Knowledge Level: ",round(wgm_sf$KnowLevel,0),"%","</br>",
+  sep=""
+)%>%
+  lapply(htmltools::HTML)
+
+#Display map
+leaflet(wgm_sf)%>%
+  addTiles()%>%
+  setView(lat=0,lng=0,zoom=2)%>%
+  addPolygons(fillColor = ~mypalette(KnowLevel),stroke = F,
+              label=mytext,fillOpacity = 0.9)%>%
+  addLegend(pal = mypalette,values=~KnowLevel,
+            title="Self-Reported </br> Knowledge Level (%)",position = "bottomleft",
+            opacity=0.9,labFormat = labelFormat(suffix = "%"))
+```
+
+# Making animated plots with the [gganimate](https://gganimate.com/) package
+
+```{r}
+#| label: animate-map
+#| title: "Perceived Knowledge About Science By Region and Age Group"
+#| message: false
+#| warning: false
+#| fig-width: 15
+#| fig-height: 10
+
+#Loading pre-cleaned data
+wgm_sci_age<-readRDS("wgm_sci_age.RDS")
+
+#Plotting with gganimate
+ggplot(wgm_sci_age,aes(Prop,Region,fill=AgeRange),color="black")+
+  geom_bar(stat="identity",position = "dodge")+
+  scale_y_discrete(limits=rev)+
+  scale_fill_manual(values=c("#003366","#33CCCC","#FFCC00"),
+                    guide=guide_legend(reverse = T))+ 
+  scale_x_continuous(labels = scales::percent_format(accuracy = 1))+
+  labs(x=NULL,y=NULL,title="Perceived Knowledge About Science By Region and Age Group")+
+  theme_minimal()+
+  theme(legend.position = c(0.85,0.8),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        text = element_text(size=20),
+        panel.background = element_rect(fill = "#faf9f6",color = "#faf9f6"),
+        plot.background = element_rect(fill="#faf9f6",color="#faf9f6"),
+        panel.grid.major.x = element_line(linetype = "dashed",colour = "grey"),
+        plot.title.position = "plot")+
+  transition_states(Region,wrap=F)+
+  shadow_mark()+
+  enter_fade()
+```
+
