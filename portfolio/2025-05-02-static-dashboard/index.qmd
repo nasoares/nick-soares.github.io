@@ -1,0 +1,13 @@
+---
+title: "Static Dashboard"
+description: "Using leaflet and gganimate"
+author: 
+  - name: Nick Soares
+    url: https://github.com/nasoares
+date: 05-02-2025
+image: static_dash_snapshot.jpg
+---
+
+# Static dashboard hosted on [Quarto Pub](https://quartopub.com/)
+
+<iframe width="1200" height="700" src="https://nasoares.quarto.pub/wellcome-global-monitor-2018/"></iframe>
