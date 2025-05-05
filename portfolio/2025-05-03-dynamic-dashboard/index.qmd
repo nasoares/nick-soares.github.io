@@ -10,4 +10,4 @@ image: dynamic_dash_snapshot.jpg
 
 # Dynamic dashboard hosted on [shinyapps.io](https://www.shinyapps.io/) with interactive elements from the [Shiny](https://shiny.posit.co/) package
 
-<iframe width="1200" height="700" src="http://nasoares.shinyapps.io/lab-4"></iframe>
+<iframe src="https://nasoares.shinyapps.io/lab-4/" frameborder="0" width="1200" height="700"></iframe>
