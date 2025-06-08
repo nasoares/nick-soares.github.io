@@ -1,0 +1,85 @@
+---
+title: "Using APIs"
+description: "Communicating with the Public satellite pass API"
+author: 
+  - name: "Nick Soares"
+    url: https://github.com/nasoares
+date: 06-02-2025
+image: api_clipart.png
+---
+```{r}
+#| context: setup
+#| label: load-packages
+#| warning: false
+#| message: false
+#| echo: false
+
+library(tidyverse)
+library(rlang)
+library(purrr)
+library(httr)
+library(jsonlite)
+library(leaflet)
+```
+
+# Writing a function to request satellite pass data from the Public satellite pass API. Pulling the data for satellite passes from US State Capitols.
+
+```{r}
+#| label: API function
+#| eval: false
+
+# Writing a function to interface with API
+
+get_city_info <- function(lat, long) {
+  url <- paste0("https://api.g7vrd.co.uk/v1/satellite-passes/25544/",
+                lat, "/", long, ".json?hours=72") # pulls by lat long
+  
+  res <- try(GET(url), silent = TRUE)
+  content <- content(res, "text", encoding = "UTF-8")
+  json_data <- fromJSON(content, flatten = TRUE)
+  return(json_data)
+}
+
+# Pulling from the API
+
+city_info <- cities %>%
+  mutate(info = pmap(list(lat, long), get_city_info))
+```
+
+# Building a leaflet plot to display the satellite passes over each state capitol
+
+```{r}
+#| label: plot
+
+# Loading pre-processed data from API call on June 8th, 2025
+
+popup_data <- readRDS("popup_data.RDS")
+ordered_cities <- readRDS("ordered_cities.RDS")
+
+
+# Displaying data pulled from the API on June 8th, 2025
+
+leaflet(popup_data) %>%
+  addProviderTiles(providers$Esri.WorldImagery) %>%
+  addMarkers(
+    lng = ~long,
+    lat = ~lat,
+    label = ~paste0(city, ": ", soonest),  # Hover info
+    popup = ~paste0(
+      "<strong>", city, "</strong><br>",
+      "Upcoming ISS Passes:<br>",
+      all_passes
+    ),
+    icon = makeIcon(
+      iconUrl = "rocket.svg",
+      iconWidth = 15, iconHeight = 15)
+  ) %>%
+  addPolylines(
+    lng = ordered_cities$long,
+    lat = ordered_cities$lat,
+    color = "blue",
+    weight = 2,
+    opacity = 0.8,
+    label = "ISS Pass Order"
+  )
+```
