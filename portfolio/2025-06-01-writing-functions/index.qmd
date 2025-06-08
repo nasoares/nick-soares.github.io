@@ -1,0 +1,143 @@
+---
+title: "Writing Functions"
+description: "Writing efficient functions and using purrr for iteration"
+author: 
+  - name: "Nick Soares"
+    url: https://github.com/nasoares
+date: 06-01-2025
+image: purrr_logo.jpg
+---
+
+```{r}
+#| context: setup
+#| label: load-packages
+#| warning: false
+#| message: false
+#| echo: false
+
+library(tidyverse)
+library(rlang)
+library(palmerpenguins)
+library(nycflights13)
+```
+
+# Writing a function that removes outliers in a dataset based on a user-defined SD threshold.
+
+```{r}
+#| label: exercise-1
+
+remove_outliers <- function(df, ..., sd_thresh = 3){
+  
+  #check for non-numeric columns
+  non_num <- df %>%
+    select(...) %>%
+    map_lgl(~ !(is.numeric(.x))) %>%
+    keep(identity) %>%
+    names()
+  
+  if (length(non_num) > 0) {
+    stop("The following columns are not numeric: ",
+         str_c(non_num, collapse = ", "))
+  }
+  
+  #finding z-scores of each column
+  z_scores <- df %>% 
+    select(...) %>% 
+    mutate(across(everything(), scale),
+           id = as.character(c(1:nrow(df)))) %>%
+    filter(if_all(everything(), ~ .< sd_thresh),
+           if_all(everything(), ~ .> sd_thresh * -1))
+  
+  #removing outliers by row ID
+  no_outliers <- df %>%
+    filter(row_number() %in% as.numeric(z_scores$id))
+  
+  #final output
+  no_outliers
+
+}
+```
+
+# Writing a function that imputes missing numeric values in a dataset with a default value defined by the user. 
+
+```{r}
+#| label: exercise-2
+
+impute_missing <- function(df, ..., impute_fun = mean){
+  
+  #check for non-numeric columns
+  non_num <- df %>%
+    select(...) %>%
+    map_lgl(~ !(is.numeric(.x))) %>%
+    keep(identity) %>%
+    names()
+  
+  if (length(non_num) > 0) {
+    stop("The following columns are not numeric: ",
+         str_c(non_num, collapse = ", "))
+  }
+  
+  #nested function for finding NAs and replacing with user-defined function
+  find_replace <- function(col, nested_fun = impute_fun){
+    col_omit <- na.omit(col)
+    col_fxn <- nested_fun(col_omit)
+    col_replace <- replace_na(col, col_fxn)
+    col_replace
+  }
+  
+  #applying the function to the user-defined columns
+  impute_df <- df %>%
+    select(...) %>%
+    mutate(across(everything(), find_replace)) 
+  
+  #placing imputed columns back into main df
+  merged_df <- df
+  merged_df[,colnames(impute_df)] <- impute_df
+  
+  #final output
+  merged_df
+  
+}
+
+```
+
+# Combining the functions defined above into one function that fits a linear regression model for the supplied dataset.
+
+```{r}
+#| label: exercise-3
+
+fit_model <- function(df, impute_missing = F, remove_outliers = F, 
+                      mod_formula, ...) {
+  if (impute_missing == T) {
+    df <- impute_missing(df, ...)
+  }
+  
+  if (remove_outliers == T) {
+    df <- remove_outliers(df, ...)
+  }
+  
+  summary(lm(mod_formula, data = df))
+}
+
+```
+
+# Creating a data frame of argument combinations with `crossing()` and iterating over every combination with `pmap()` from the `purrr` package to generate multiple regression models. 
+
+```{r}
+#| label: exercise-5
+
+df_arg_analyses <- crossing(
+  impute = c(TRUE, FALSE),
+  remove_outliers = c(TRUE, FALSE), 
+  mod = c(price ~ carat, 
+          price ~ carat + cut,
+          price ~ carat + cut + clarity,
+          price ~ carat + cut + clarity + color)
+)
+df_arg_analyses
+
+colnames(df_arg_analyses) <- c("impute_missing", 
+                               "remove_outliers", 
+                               "mod_formula")
+pmap(df_arg_analyses, fit_model, df = diamonds)
+```

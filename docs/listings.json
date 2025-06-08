@@ -2,6 +2,7 @@
   {
     "listing": "/blog-posts.html",
     "items": [
+      "/portfolio/2025-06-01-writing-functions/index.html",
       "/portfolio/2025-05-03-dynamic-dashboard/index.html",
       "/portfolio/2025-05-02-static-dashboard/index.html",
       "/portfolio/2025-04-30-advanced-visualizations/index.html"
