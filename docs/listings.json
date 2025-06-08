@@ -2,6 +2,7 @@
   {
     "listing": "/blog-posts.html",
     "items": [
+      "/portfolio/2025-06-08-generative-art/index.html",
       "/portfolio/2025-06-03-web-scraping/index.html",
       "/portfolio/2025-06-02-using-APIs/index.html",
       "/portfolio/2025-06-01-writing-functions/index.html",

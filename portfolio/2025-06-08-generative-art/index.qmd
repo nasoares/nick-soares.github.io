@@ -1,0 +1,157 @@
+---
+title: "Generative Art"
+description: "Making art from data with the ambient package"
+author: 
+  - name: "Nick Soares"
+    url: https://github.com/nasoares
+date: 06-08-2025
+image: nebulagon.jpg
+---
+
+```{r}
+#| context: setup
+#| label: load-packages
+#| warning: false
+#| message: false
+#| echo: false
+
+library(tidyverse)
+library(ggthemes)
+library(scales)
+library(ambient)
+library(gganimate)
+```
+
+# Gallery Entry #1
+
+```{r}
+#| warning: false
+#| label: building-art-one
+
+#using a phytoplankton monitoring time series from Morro Bay
+
+hab <- read.csv("MBF_upload.csv")
+
+#modifying and overlaying data on a single plot
+
+hab_spiral <- hab |>
+  ggplot() +
+  geom_point(aes(Day.of.Year..1.365., 
+             log10(Total.Phytoplankton..cells.L.), 
+             colour = Day.of.Year..1.365., 
+             size = Avg.Chloro..mg.m3./2),
+             show.legend = FALSE) +
+  geom_point(aes(abs(366-Day.of.Year..1.365.), 
+             log(Total.Phytoplankton..cells.L.), 
+             colour = Day.of.Year..1.365., 
+             size = Avg.Chloro..mg.m3.),
+             show.legend = FALSE) +
+  geom_bar(aes(Day.of.Year..1.365., 
+              log10(Akashiwo.sanguinea..cells.L.), 
+              colour  = Temp..deg.C.*20),
+           stat = "identity", 
+           show.legend = FALSE) +
+  geom_bar(aes(Day.of.Year..1.365., 
+              log10(Pseudo.nitzschia.seriata.group..cells.L.), 
+              colour  = Temp..deg.C.*10),
+           stat = "identity", 
+           show.legend = FALSE) +
+  coord_polar() + 
+  theme_void() +
+  scale_color_viridis_c()
+
+hab_spiral
+```
+
+## Title: GalaxSea
+
+### Dramatic Description
+
+When viewed under a microscope, the phytoplankton that inhabit the ocean can appear as numerous as the stars in the sky. This piece uses a plankton monitoring time series as the underlying dataset, from which transformations, aesthetic manipulations, and layering result in a swirling assortment of points and rays akin to a solar system. This piece evokes the continuum between microscopic and macroscopic, the inherent link between the smallest and largest scales accessible to human observation.
+
+### Code Choices
+
+Using `coord_polar()` changes the structure of the x-axis so all the data spirals around a central point. Multiple data transformations (such as log scaling) are used in the layered `geom_bar()` and `geom_point()` calls to space out the data so it has a characteristic cosmic feel, like asteroid belts encircling the sun.
+
+# Gallery Entry #2
+
+```{r}
+#| warning: false
+#| label: building-art-two
+
+#generate color palettes
+
+sample_canva <- function(seed = NULL) {
+  if(!is.null(seed)) set.seed(seed)
+  sample(ggthemes::canva_palettes, 1)[[1]]
+}
+
+#create a canvas
+
+x_coords <- seq(from = 0, to = 1, length.out = 800)
+y_coords <- seq(from = 0, to = 1, length.out = 800)
+canvas <- long_grid(x = x_coords, y = y_coords) 
+
+#add some generated "paint" to the canvas
+
+canvas <- canvas |>
+  mutate(paint = fracture(
+            noise = gen_simplex,
+            x = x,
+            y = y,
+            octaves = 20,
+            fractal = fbm,
+            seed = 29))
+
+#defining the shape of a nonagon to add some structure/geometry to the fractal chaos
+
+theta <- (0:9) * pi / 4.5
+nonagon <- tibble(
+  x = sin(theta),
+  y = cos(theta)
+)
+
+nonagon_scale <- nonagon |>
+  mutate(x_scale = x/4+0.5, 
+         y_scale = y/4+0.5)
+
+#putting them all together
+
+fractal_plot <- ggplot() +
+  geom_raster(data = canvas, 
+              aes(x, y, fill = paint), 
+              show.legend = FALSE) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_gradientn(colours = sample_canva(seed = 42)) +
+  geom_polygon(data = nonagon_scale,
+               aes(x_scale, y_scale), 
+               colour = "white", 
+               fill = NA, 
+               show.legend = FALSE) +
+  geom_polygon(data = nonagon_scale,
+               aes(x_scale-0.1, y_scale-0.1), 
+               colour = "white", 
+               fill = NA, 
+               show.legend = FALSE) +
+  geom_polygon(data = nonagon_scale,
+               aes(x_scale+0.1, y_scale+0.1), 
+               colour = "white", 
+               fill = NA, 
+               show.legend = FALSE) +
+  coord_equal() + 
+  theme_void()
+
+fractal_plot
+```
+
+## Title: Nebulagon
+
+### Dramatic Description
+
+A nebula at the outskirts of a distant galaxy. Within the gas and cosmic dust, a set of rings stand out, their seemingly-purposeful angularity denoting intelligent design amidst chaos. Perhaps leftover structures from an ancient, insterstellar race? Do you dare approach?
+
+### Code Choices
+
+The `sample_canva()` function generates a random palette that is replicable if we set a "seed". The `fracture()` function used when "painting the canvas" takes the noise generated using `gen_simplex()` and repeatedly applies it at different frequencies. By setting "octaves" to 20, the generator and fractal functions iterate over the algorithm 20 times. The nonagon structure is first built as a tibble, then rescaled using some simple transformations so it appears at the center of the final plot. The final image brings all elements together by layering polygons on top of a raster base.
+
