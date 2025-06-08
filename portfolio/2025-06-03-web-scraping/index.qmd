@@ -4,6 +4,8 @@ description: "Scraping data from cheese.com with the rvest package"
 author: 
   - name: "Nick Soares"
     url: https://github.com/nasoares
+  - name: "Nathan Greenfield"
+    url: https://github.com/nmgreenfield
 date: 06-03-2025
 image: "cheese_list.jpg"
 ---

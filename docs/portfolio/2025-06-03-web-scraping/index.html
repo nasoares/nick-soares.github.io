@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Nick Soares">
+<meta name="author" content="Nathan Greenfield">
 <meta name="dcterms.date" content="2025-06-03">
 <meta name="description" content="Scraping data from cheese.com with the rvest package">
 
@@ -160,9 +161,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="quarto-title-meta column-page-left">
 
       <div>
-      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-heading">Authors</div>
       <div class="quarto-title-meta-contents">
                <p><a href="https://github.com/nasoares">Nick Soares</a> </p>
+               <p><a href="https://github.com/nmgreenfield">Nathan Greenfield</a> </p>
             </div>
     </div>
       
@@ -403,50 +405,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(final_cheese_info)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                        cheese
-1                    Snow Camp
-2                       Coalho
-3      Stella Reduced Fat Blue
-4                  Blue Yonder
-5                     Grabetto
-6                San Simón DOP
-7  Zanetti Parmigiano Reggiano
-8                    Lou Palou
-9            Caprice des Dieux
-10                      Postel
-                                                 milk       country
-1         Made from pasteurized cow's and goat's milk United States
-2   Made from pasteurized or unpasteurized cow's milk        Brazil
-3                    Made from pasteurized cow's milk United States
-4                  Made from unpasteurized cow's milk United States
-5  Made from pasteurized or unpasteurized goat's milk     Australia
-6                    Made from pasteurized cow's milk         Spain
-7                  Made from unpasteurized cow's milk         Italy
-8                                Made from cow's milk        France
-9                    Made from pasteurized cow's milk        France
-10                   Made from pasteurized cow's milk       Belgium
-                            family                          type
-1  No family information available                          soft
-2  No family information available                     semi-hard
-3                             Blue            semi-soft, artisan
-4                             Blue        semi-soft, blue-veined
-5  No family information available       semi-hard, soft-ripened
-6  No family information available                     semi-soft
-7                         Parmesan                 hard, artisan
-8  No family information available                     semi-soft
-9  No family information available            soft, soft-ripened
-10 No family information available No type information available
-                            flavor
-1                  buttery, creamy
-2                    acidic, salty
-3                    full-flavored
-4                           subtle
-5              nutty, sharp, tangy
-6                          buttery
-7                    nutty, savory
-8  No flavor information available
-9           buttery, nutty, smooth
-10 No flavor information available</code></pre>
+<pre><code>                    cheese                                              milk
+1  Dark / Snow Canyon Edam                Made from unpasteurized cow's milk
+2         Pecorino Ginepro                Made from pasteurized sheep's milk
+3              Royal Rebel                Made from unpasteurized cow's milk
+4              Stella Blue                  Made from pasteurized cow's milk
+5               Belletoile                  Made from pasteurized cow's milk
+6                 Morlacco     Made from skimmed or unpasteurized cow's milk
+7               Asher Blue                Made from unpasteurized cow's milk
+8      Casciotta di Urbino      Made from pasteurized cow's and sheep's milk
+9            Heublumenkäse Made from pasteurized or unpasteurized cow's milk
+10                Pyramide                 Made from pasteurized goat's milk
+                            country                          family
+1                     United States No family information available
+2                             Italy                        Pecorino
+3                           Austria No family information available
+4                     United States                            Blue
+5                            France                            Brie
+6                             Italy No family information available
+7                     United States                            Blue
+8                             Italy                        Caciotta
+9  Austria, Germany and Switzerland No family information available
+10                           France No family information available
+                       type                                        flavor
+1  hard, semi-hard, artisan    buttery, creamy, mild, milky, sharp, tangy
+2        semi-hard, artisan                         fruity, savory, woody
+3             hard, artisan                          salty, spicy, strong
+4        semi-soft, artisan                                         tangy
+5        soft, soft-ripened       garlicky, mild, mushroomy, nutty, tangy
+6             soft, artisan                                         tangy
+7    semi-soft, blue-veined grassy, milky, mushroomy, salty, sweet, tangy
+8        semi-soft, artisan                          acidic, milky, nutty
+9        semi-hard, artisan                                 creamy, nutty
+10            soft, artisan               No flavor information available</code></pre>
 </div>
 </div>
 

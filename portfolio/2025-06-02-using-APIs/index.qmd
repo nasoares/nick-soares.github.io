@@ -4,9 +4,12 @@ description: "Communicating with the Public satellite pass API"
 author: 
   - name: "Nick Soares"
     url: https://github.com/nasoares
+  - name: "Nathan Greenfield"
+    url: https://github.com/nmgreenfield
 date: 06-02-2025
 image: api_clipart.png
 ---
+
 ```{r}
 #| context: setup
 #| label: load-packages
